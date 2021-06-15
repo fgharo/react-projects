@@ -33,10 +33,14 @@ pipeline {
                         echo "Building Archive"
                         cd ${APP_DIR}
                         npm config set registry ${NEXUS_SERVER}
-                        npm install
-                        npm install -g npm-login-cmd
+                        npm build
+                        
+                        echo "Testing archive"
+                        npm test
+                        
                         echo "Publishing archive"
                         npm config set registry ${NEXUS_SERVER_PUBLISH}
+                        npm install -g npm-login-cmd
                         export NPM_USER=admin
                         export NPM_PASS=admin123
                         export NPM_EMAIL=admin@example.org
