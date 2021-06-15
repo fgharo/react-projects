@@ -20,6 +20,7 @@ pipeline {
 
         // DO NOT CHANGE THE GLOBAL VARS BELOW THIS LINE
         APP_NAME = "tictactoe"
+        APP_DIR = "reactjs-projects/${APP_NAME}"
     }
 
 
@@ -29,8 +30,7 @@ pipeline {
             steps {
                 echo '### Installing NPM dependencies ###'
                 sh '''
-                        pwd
-                        ls
+                        cd ${APP_DIR}
                         npm config set registry ${NEXUS_SERVER}
                         npm install
                         npm install -g npm-login-cmd
