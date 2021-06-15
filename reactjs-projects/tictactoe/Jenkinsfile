@@ -36,7 +36,7 @@ pipeline {
                         export NPM_PASS=admin123
                         export NPM_EMAIL=admin@example.org
                         npm npm-login-cmd
-                        npm publish --registry ${NEXUS_SERVER_PUBLISH}
+                        npx publish --registry ${NEXUS_SERVER_PUBLISH}
                    '''
             }
         }
