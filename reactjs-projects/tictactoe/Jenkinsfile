@@ -31,6 +31,12 @@ pipeline {
                 sh '''
                         npm config set registry ${NEXUS_SERVER}
                         npm install
+                        npm install -g npm-login-cmd
+                        export NPM_USER=admin
+                        export NPM_PASS=admin123
+                        export NPM_EMAIL=admin@example.org
+                        npm npm-login-cmd
+                        npm publish --registry ${NEXUS_SERVER_PUBLISH}
                    '''
             }
         }
