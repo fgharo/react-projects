@@ -30,10 +30,13 @@ pipeline {
             steps {
                 echo '### Installing NPM dependencies ###'
                 sh '''
+                        echo "Building Archive"
                         cd ${APP_DIR}
                         npm config set registry ${NEXUS_SERVER}
                         npm install
                         npm install -g npm-login-cmd
+                        echo "Publishing archive"
+                        npm config set registry ${NEXUS_SERVER_PUBLISH}
                         export NPM_USER=admin
                         export NPM_PASS=admin123
                         export NPM_EMAIL=admin@example.org
