@@ -1,0 +1,38 @@
+pipeline {
+    agent {
+        node {
+            label 'nodejs-slave'
+        }
+    }
+
+    stages {
+        stage('Building Dist') {
+            steps {
+                sh 'npm run build'
+            }
+        }
+        
+        stage('Building App Image') {
+            steps {
+                container(name:'kaniko', shell:'/busybox/sh'){
+                    sh  '''#!/busybox/sh
+                        pwd
+                        ls
+                        /kaniko/executor --verbosity=debug --force --no-push --destination=./tictactoe:1.0.0  --tarPath runtime-image.tar --dockerfile=Dockerfile --context dir://$(pwd) --ignore-path=/busybox
+                        ls
+                        '''
+                }
+            }
+        }
+        
+        stage('Saving App Image to Registry') {
+            steps {
+                // How to do authentication with quay.io? 
+                // --authfile=/kaniko/.docker/config.json 
+                sh  '''
+                    skopeo copy docker-archive:runtime-image.tar docker://quay.io/user15/tictactoe:1.0.0 --dest-tls-verify=false             
+                    '''
+            }
+        }
+    }
+}
