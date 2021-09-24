@@ -20,9 +20,11 @@ pipeline {
         stage('Building App Image') {
             steps {
                 container(name:'kaniko', shell:'/busybox/sh'){
-                    sh  '''#!/busybox/sh
-                        /kaniko/executor --verbosity=debug --force --no-push --destination=./tictactoe:1.0.0  --tarPath runtime-image.tar --dockerfile=Dockerfile --context dir://$(pwd) --ignore-path=/busybox
-                        '''
+                    dir(SRC_CODE_DIRECTORY){
+                        sh  '''#!/busybox/sh
+                            /kaniko/executor --verbosity=debug --force --no-push --tarPath runtime-image.tar --dockerfile=Dockerfile --context dir://$(pwd) --ignore-path=/busybox
+                            '''
+                    }
                 }
             }
         }
