@@ -11,6 +11,7 @@ pipeline {
         stage('Building Dist') {
             steps {
                 dir(SRC_CODE_DIRECTORY){
+                    sh 'npm install'
                     sh 'npm run build'
                 }
             }
