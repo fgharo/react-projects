@@ -22,7 +22,7 @@ pipeline {
                 container(name:'kaniko', shell:'/busybox/sh'){
                     dir(SRC_CODE_DIRECTORY){
                         sh  '''#!/busybox/sh
-                            /kaniko/executor --verbosity=debug --force --no-push --tarPath runtime-image.tar --dockerfile=Dockerfile --context dir://$(pwd) --ignore-path=/busybox
+                            /kaniko/executor --verbosity=debug --force --no-push --destination=./bogusimagenamepath:bogusversion --tarPath runtime-image.tar --dockerfile=Dockerfile --context dir://$(pwd) --ignore-path=/busybox
                             '''
                     }
                 }
