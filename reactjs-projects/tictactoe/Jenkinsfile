@@ -20,14 +20,9 @@ pipeline {
         stage('Building App Image') {
             steps {
                 container(name:'kaniko', shell:'/busybox/sh'){
-                    dir(SRC_CODE_DIRECTORY){
-                        sh  '''#!/busybox/sh
-                            pwd
-                            ls
-                            /kaniko/executor --verbosity=debug --force --no-push --destination=./tictactoe:1.0.0  --tarPath runtime-image.tar --dockerfile=Dockerfile --context dir://$(pwd) --ignore-path=/busybox
-                            ls
-                            '''
-                    }
+                    sh  '''#!/busybox/sh
+                        /kaniko/executor --verbosity=debug --force --no-push --destination=./tictactoe:1.0.0  --tarPath runtime-image.tar --dockerfile=Dockerfile --context dir://$(pwd) --ignore-path=/busybox
+                        '''
                 }
             }
         }
@@ -35,10 +30,10 @@ pipeline {
         stage('Saving App Image to Registry') {
             steps {
                 // How to do authentication with quay.io? 
-                // --authfile=/kaniko/.docker/config.json 
+                //  
                 dir(SRC_CODE_DIRECTORY){
                     sh  '''
-                        skopeo copy docker-archive:runtime-image.tar docker://quay.io/user15/tictactoe:1.0.0 --dest-tls-verify=false             
+                        skopeo copy docker-archive:runtime-image.tar docker://quay.io/user15/tictactoe:1.0.0 --dest-tls-verify=false --authfile=/kaniko/.docker/kaniko-secret.json      
                         '''
                 }
             }
