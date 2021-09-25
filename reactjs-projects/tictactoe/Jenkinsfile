@@ -31,11 +31,11 @@ pipeline {
         
         stage('Saving App Image to Registry') {
             steps {
-                // How to do authentication with quay.io? 
+                // Replacing docker://quay.io/user15/tictactoe:1.0.0 with local artifactory repository.
                 //  
                 dir(SRC_CODE_DIRECTORY){
                     sh  '''
-                        skopeo copy docker-archive:runtime-image.tar docker://quay.io/user15/tictactoe:1.0.0 --dest-tls-verify=false --authfile=/kaniko/.docker/kaniko-secret.json      
+                        skopeo copy docker-archive:runtime-image.tar docker://192.168.1.101:8082/docker-quickstart-local/uiapps/tictactoe:1.0.0 --dest-tls-verify=false --authfile=/kaniko/.docker/kaniko-secret.json      
                         '''
                 }
             }
