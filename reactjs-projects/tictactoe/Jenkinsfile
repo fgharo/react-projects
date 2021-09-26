@@ -6,9 +6,14 @@ pipeline {
     }
     environment {
         SRC_CODE_DIRECTORY = 'reactjs-projects/tictactoe'
+        JFROG_CONTAINER_REGISTRY = '192.168.1.101:8082'
+        JFROG_CONTAINER_REGISTRY_AUTH_FILE = '/tmp/.docker/.dockerconfigjson'
+        IMAGE_NAME = 'tictactoe'
+        IMAGE_VERSION = '1.0.0'
+        IMAGE_DESTINATION = "docker://${JFROG_CONTAINER_REGISTRY}/docker-local/apps/ui/browser/${IMAGE_NAME}:${IMAGE_VERSION}"
     }
     stages {
-        stage('Building Dist') {
+        stage('Building App') {
             steps {
                 dir(SRC_CODE_DIRECTORY){
                     sh 'npm install'
@@ -31,11 +36,9 @@ pipeline {
         
         stage('Saving App Image to Registry') {
             steps {
-                // Replacing docker://quay.io/user15/tictactoe:1.0.0 with local artifactory repository.
-                //  
                 dir(SRC_CODE_DIRECTORY){
                     sh  '''
-                        skopeo copy docker-archive:runtime-image.tar docker://192.168.1.101:8082/docker-quickstart-local/uiapps/tictactoe:1.0.0 --dest-tls-verify=false --authfile=/kaniko/.docker/kaniko-secret.json      
+                        skopeo copy docker-archive:runtime-image.tar ${IMAGE_DESTINATION} --dest-tls-verify=false --authfile=${JFROG_CONTAINER_REGISTRY_AUTH_FILE}
                         '''
                 }
             }
