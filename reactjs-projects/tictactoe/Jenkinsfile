@@ -22,7 +22,7 @@ pipeline {
             }
         }
         
-        stage('Building App Image') {
+        stage('Building Container Image') {
             steps {
                 container(name:'kaniko', shell:'/busybox/sh'){
                     dir(SRC_CODE_DIRECTORY){
@@ -34,7 +34,7 @@ pipeline {
             }
         }
         
-        stage('Saving App Image to Registry') {
+        stage('Saving Container Image to Registry') {
             steps {
                 dir(SRC_CODE_DIRECTORY){
                     sh  '''
